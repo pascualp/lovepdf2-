@@ -3,58 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super PDF Tools Web</title>
+    <meta name="description" content="Herramientas PDF gratuitas y seguras. Unir PDF, Dividir, PDF a Excel y más. Sin subir archivos a la nube.">
+    <title>iPDF Tools - Editor PDF Privado</title>
     
-    <!-- Estilos CSS -->
+    <!-- FUENTES Y ICONOS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        :root { --primary: #e53e3e; --bg: #f7f9fc; --text: #2d3748; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
-        
-        /* Header */
-        header { background: white; padding: 1rem 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: center; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
-        
-        /* Grid Layout */
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1.5rem; }
-        
-        /* Tarjetas */
+        :root {
+            --brand-color: #e5322d;
+            --brand-hover: #c92b27;
+            --dark: #33333b;
+            --gray: #707078;
+            --bg: #f5f5fa;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--dark);
+            margin: 0; padding: 0;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        /* --- HEADER --- */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0 5%;
+            height: 70px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+        .logo { 
+            font-size: 24px; font-weight: 800; color: var(--brand-color); 
+            cursor: pointer; display: flex; align-items: center; gap: 10px; 
+        }
+        .nav-links { display: flex; gap: 20px; font-weight: 600; font-size: 14px; display: none; }
+        @media (min-width: 768px) { .nav-links { display: flex; } }
+
+        /* --- MENÚ PRINCIPAL --- */
+        .hero { text-align: center; padding: 60px 20px 40px; }
+        .hero h1 { font-size: 36px; margin-bottom: 10px; color: var(--dark); letter-spacing: -1px; }
+        .hero p { font-size: 18px; color: var(--gray); font-weight: 400; max-width: 600px; margin: 0 auto; }
+
+        .container { max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+            gap: 20px; 
+        }
+
         .card {
-            background: white; padding: 2rem; border-radius: 12px; cursor: pointer;
-            transition: all 0.2s; border: 1px solid #e2e8f0; display: flex; flex-direction: column;
-            align-items: center; text-align: center; height: 100%;
+            background: white; padding: 30px; border-radius: 12px;
+            text-align: center; transition: all 0.3s ease; cursor: pointer;
+            border: 1px solid transparent; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100%;
         }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
-        .icon { font-size: 3rem; margin-bottom: 1rem; }
-        .card h3 { margin: 0.5rem 0; font-size: 1.1rem; color: #1a202c; }
-        .card p { font-size: 0.85rem; color: #718096; line-height: 1.4; }
-
-        /* Vistas de Herramientas */
-        .tool-panel { display: none; background: white; padding: 3rem; border-radius: 16px; max-width: 600px; margin: 2rem auto; text-align: center; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .active-view { display: block; }
-
-        /* Inputs y Botones */
-        .btn-back { background: transparent; border: none; color: #718096; cursor: pointer; margin-bottom: 1rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; }
-        .btn-back:hover { color: var(--primary); }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: #e5e5e5; }
         
-        .btn-action {
-            background-color: var(--primary); color: white; width: 100%; padding: 1rem;
-            border: none; border-radius: 8px; font-size: 1rem; font-weight: bold;
-            cursor: pointer; margin-top: 1.5rem; transition: background 0.2s;
+        .card-icon { font-size: 42px; color: var(--brand-color); margin-bottom: 15px; }
+        .card h3 { font-size: 18px; margin: 10px 0; font-weight: 700; }
+        .card p { font-size: 14px; color: var(--gray); line-height: 1.5; margin: 0; }
+
+        /* --- ZONA DE HERRAMIENTA (CORREGIDO) --- */
+        .tool-interface {
+            display: none; /* Oculto por defecto */
+            background: #fff;
+            min-height: 100vh;
+            padding: 40px 20px;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
         }
-        .btn-action:hover { background-color: #c53030; }
-        .btn-action:disabled { background-color: #cbd5e0; cursor: not-allowed; }
 
-        input[type="file"] { margin: 1rem 0; padding: 0.5rem; border: 2px dashed #cbd5e0; border-radius: 8px; width: 100%; box-sizing: border-box; }
-        input[type="text"], input[type="password"] { width: 100%; padding: 0.8rem; margin: 0.5rem 0; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; }
-        
-        .status { margin-top: 1rem; font-weight: 600; min-height: 1.5rem; }
-        .text-green { color: #2f855a; }
-        .text-red { color: #c53030; }
-        .info-text { font-size: 0.8rem; color: #718096; margin-bottom: 1rem; }
+        /* Esta es la clase que arregla tu problema visual */
+        .upload-zone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f7f9fa;
+            border: 3px dashed #e0e0e0;
+            width: 90%;
+            max-width: 650px;
+            min-height: 350px; /* Altura mínima asegurada */
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-zone:hover { border-color: var(--brand-color); background: #fffcfc; }
+        .upload-zone i { font-size: 80px; color: var(--brand-color); margin-bottom: 25px; }
+        .upload-zone span { font-size: 22px; font-weight: 600; color: var(--dark); }
+
+        .big-btn {
+            background: var(--brand-color); color: white;
+            border: none; padding: 18px 40px; border-radius: 8px;
+            font-size: 20px; font-weight: 700; cursor: pointer;
+            margin-top: 30px; transition: 0.2s; width: 100%; max-width: 350px;
+            box-shadow: 0 4px 10px rgba(229, 50, 45, 0.2);
+        }
+        .big-btn:hover { background: var(--brand-hover); transform: scale(1.02); }
+        .big-btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+        .back-link { 
+            margin-top: 50px; display: inline-block; color: #666; 
+            text-decoration: none; font-weight: 600; cursor: pointer;
+        }
+        .back-link:hover { color: var(--brand-color); }
+
+        /* Inputs extra (borrar paginas) */
+        #extra-options { margin: 20px auto; max-width: 300px; }
+        .input-box { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; text-align: center; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 
-    <!-- LIBRERÍAS (Todas cargadas desde CDN) -->
+    <!-- LIBRERÍAS CDN (Vitales) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
@@ -64,265 +134,254 @@
 </head>
 <body>
 
+    <!-- CABECERA -->
     <header>
-        <div class="logo" onclick="goHome()">🛠️ PDF Tools Ultimate</div>
+        <div class="logo" onclick="location.reload()">
+            <i class="fa-solid fa-file-pdf"></i>&nbsp; iPDF Tools
+        </div>
+        <div class="nav-links">
+            <span>Unir PDF</span>
+            <span>Dividir PDF</span>
+            <span>Comprimir</span>
+        </div>
     </header>
 
-    <div class="container">
-        <!-- MENÚ DE OPCIONES -->
-        <div id="menu-grid" class="grid">
-            
-            <div class="card" onclick="loadTool('merge')">
-                <div class="icon">🔗</div><h3>Unir PDF</h3><p>Combina varios archivos en uno solo.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('split')">
-                <div class="icon">✂️</div><h3>Dividir PDF</h3><p>Extrae todas las páginas como archivos sueltos (ZIP).</p>
-            </div>
-
-            <div class="card" onclick="loadTool('delete')">
-                <div class="icon">🗑️</div><h3>Eliminar Páginas</h3><p>Borra páginas específicas de tu documento.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('excel')">
-                <div class="icon">📊</div><h3>PDF a Excel</h3><p>Convierte tablas y listas a .xlsx.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('rotate')">
-                <div class="icon">🔄</div><h3>Rotar PDF</h3><p>Gira tus documentos 90 grados.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('jpg2pdf')">
-                <div class="icon">🖼️</div><h3>JPG a PDF</h3><p>Convierte tus fotos en un documento PDF.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('pdf2jpg')">
-                <div class="icon">📸</div><h3>PDF a JPG</h3><p>Convierte páginas de PDF a imágenes.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('watermark')">
-                <div class="icon">💧</div><h3>Marca de Agua</h3><p>Añade texto sobre tus páginas.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('number')">
-                <div class="icon">🔢</div><h3>Numerar Páginas</h3><p>Añade números al pie de página.</p>
-            </div>
-
-            <div class="card" onclick="loadTool('protect')">
-                <div class="icon">🔒</div><h3>Proteger PDF</h3><p>Añade una contraseña a tu archivo.</p>
-            </div>
-
+    <!-- VISTA PRINCIPAL (GRID) -->
+    <div id="main-menu">
+        <div class="hero">
+            <h1>Herramientas PDF gratuitas y privadas</h1>
+            <p>Todo ocurre en tu navegador. Tus archivos nunca salen de tu ordenador.</p>
         </div>
 
-        <!-- PANELES DE HERRAMIENTAS (Se generan dinámicamente o se muestran) -->
+        <div class="container grid">
+            <div class="card" onclick="openTool('merge')">
+                <i class="card-icon fa-solid fa-code-merge"></i>
+                <h3>Unir PDF</h3>
+                <p>Combina múltiples archivos en uno solo ordenado.</p>
+            </div>
+
+            <div class="card" onclick="openTool('split')">
+                <i class="card-icon fa-solid fa-scissors"></i>
+                <h3>Dividir PDF</h3>
+                <p>Separa un archivo en páginas individuales.</p>
+            </div>
+
+            <div class="card" onclick="openTool('excel')">
+                <i class="card-icon fa-solid fa-file-excel"></i>
+                <h3>PDF a Excel</h3>
+                <p>Extrae tablas y listas a formato .xlsx editable.</p>
+            </div>
+
+            <div class="card" onclick="openTool('rotate')">
+                <i class="card-icon fa-solid fa-rotate-right"></i>
+                <h3>Rotar PDF</h3>
+                <p>Gira tus documentos 90 grados a la derecha.</p>
+            </div>
+
+            <div class="card" onclick="openTool('delete')">
+                <i class="card-icon fa-solid fa-trash-can"></i>
+                <h3>Eliminar páginas</h3>
+                <p>Borra páginas específicas de tu documento.</p>
+            </div>
+
+            <div class="card" onclick="openTool('pdf2jpg')">
+                <i class="card-icon fa-solid fa-image"></i>
+                <h3>PDF a JPG</h3>
+                <p>Convierte las páginas del PDF a imágenes.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- VISTA DE HERRAMIENTA (WORKSPACE) -->
+    <div id="workspace" class="tool-interface">
+        <h1 id="tool-title" style="margin-bottom: 10px;">Herramienta</h1>
+        <p id="tool-desc" style="color:#666; margin-bottom: 30px;">Sube tus archivos para empezar</p>
+
+        <!-- ZONA DE CARGA ARREGLADA -->
+        <label class="upload-zone" id="drop-area">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span id="drop-text">Seleccionar archivos PDF</span>
+            <input type="file" id="file-upload" style="display: none;">
+        </label>
+
+        <div id="file-info" style="margin-top: 15px; color: var(--brand-color); font-weight: bold; min-height: 20px;"></div>
         
-        <!-- GENERIC TOOL CONTAINER -->
-        <div id="tool-container" class="tool-panel">
-            <button class="btn-back" onclick="goHome()">⬅ Volver al menú</button>
-            <h2 id="tool-title">Herramienta</h2>
-            <p id="tool-desc" class="info-text"></p>
-            
-            <div id="tool-inputs"></div>
-            
-            <button id="btn-process" class="btn-action">Procesar</button>
-            <div id="status-msg" class="status"></div>
-        </div>
+        <div id="extra-options"></div>
 
+        <button id="action-btn" class="big-btn" disabled>Empezar</button>
+        
+        <div id="status" style="margin-top: 20px; font-weight: bold;"></div>
+
+        <div class="back-link" onclick="location.reload()">
+            <i class="fa-solid fa-arrow-left"></i> Volver al inicio
+        </div>
     </div>
 
 <script>
-    // --- CONFIGURACIÓN GLOBAL ---
+    // --- LÓGICA JAVASCRIPT ---
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    const { PDFDocument, rgb, degrees, StandardFonts } = PDFLib;
+    const { PDFDocument, degrees } = PDFLib;
 
     const UI = {
-        menu: document.getElementById('menu-grid'),
-        panel: document.getElementById('tool-container'),
+        menu: document.getElementById('main-menu'),
+        workspace: document.getElementById('workspace'),
         title: document.getElementById('tool-title'),
         desc: document.getElementById('tool-desc'),
-        inputs: document.getElementById('tool-inputs'),
-        btn: document.getElementById('btn-process'),
-        status: document.getElementById('status-msg')
+        drop: document.getElementById('drop-area'),
+        text: document.getElementById('drop-text'),
+        input: document.getElementById('file-upload'),
+        info: document.getElementById('file-info'),
+        btn: document.getElementById('action-btn'),
+        status: document.getElementById('status'),
+        extras: document.getElementById('extra-options')
     };
 
-    let currentTool = null;
+    let activeTool = null;
+    let selectedFiles = [];
 
-    // --- NAVEGACIÓN ---
-    function goHome() {
-        UI.panel.style.display = 'none';
-        UI.menu.style.display = 'grid';
-        UI.inputs.innerHTML = '';
-        UI.status.textContent = '';
-        UI.btn.disabled = false;
-        UI.btn.textContent = 'Procesar';
-    }
-
-    function loadTool(tool) {
-        currentTool = tool;
+    // 1. ABRIR HERRAMIENTA
+    function openTool(tool) {
+        activeTool = tool;
         UI.menu.style.display = 'none';
-        UI.panel.style.display = 'block';
-        UI.status.textContent = '';
-        UI.btn.onclick = executeTool;
-        UI.btn.textContent = "Ejecutar";
+        UI.workspace.style.display = 'block';
+        window.scrollTo(0,0);
         
-        // Configurar UI según la herramienta
-        let html = '';
-        if(tool === 'merge') {
-            UI.title.textContent = "Unir PDFs";
-            UI.desc.textContent = "Selecciona varios archivos (mantén Ctrl pulsado)";
-            html = '<input type="file" id="file-in" accept="application/pdf" multiple>';
-        } 
-        else if(tool === 'split') {
-            UI.title.textContent = "Dividir PDF";
-            UI.desc.textContent = "Se descargará un archivo ZIP con cada página por separado.";
-            html = '<input type="file" id="file-in" accept="application/pdf">';
-        }
-        else if(tool === 'delete') {
-            UI.title.textContent = "Eliminar Páginas";
-            UI.desc.textContent = "Ejemplo: 1,3,5 (Borrará la página 1, la 3 y la 5)";
-            html = '<input type="file" id="file-in" accept="application/pdf"><input type="text" id="extra-in" placeholder="Páginas a borrar (ej: 1,2)">';
-        }
-        else if(tool === 'excel') {
-            UI.title.textContent = "PDF a Excel";
-            html = '<input type="file" id="file-in" accept="application/pdf">';
-        }
-        else if(tool === 'rotate') {
-            UI.title.textContent = "Rotar PDF";
-            html = '<input type="file" id="file-in" accept="application/pdf">';
-        }
-        else if(tool === 'jpg2pdf') {
-            UI.title.textContent = "JPG a PDF";
-            UI.desc.textContent = "Selecciona varias imágenes.";
-            html = '<input type="file" id="file-in" accept="image/jpeg, image/png" multiple>';
-        }
-        else if(tool === 'pdf2jpg') {
-            UI.title.textContent = "PDF a JPG";
-            UI.desc.textContent = "Convierte páginas a imágenes (Descarga ZIP).";
-            html = '<input type="file" id="file-in" accept="application/pdf">';
-        }
-        else if(tool === 'watermark') {
-            UI.title.textContent = "Marca de Agua";
-            html = '<input type="file" id="file-in" accept="application/pdf"><input type="text" id="extra-in" placeholder="Texto de la marca (ej: CONFIDENCIAL)">';
-        }
-        else if(tool === 'number') {
-            UI.title.textContent = "Numerar Páginas";
-            html = '<input type="file" id="file-in" accept="application/pdf">';
-        }
-        else if(tool === 'protect') {
-            UI.title.textContent = "Proteger con Contraseña";
-            html = '<input type="file" id="file-in" accept="application/pdf"><input type="password" id="extra-in" placeholder="Escribe la contraseña">';
-        }
+        // Reset
+        UI.status.innerText = "";
+        UI.info.innerText = "";
+        UI.btn.disabled = true;
+        UI.extras.innerHTML = "";
+        UI.input.value = "";
+        selectedFiles = [];
 
-        UI.inputs.innerHTML = html;
+        // Configurar Textos
+        if(tool === 'merge') {
+            UI.title.innerText = "Unir archivos PDF";
+            UI.text.innerText = "Seleccionar varios PDF";
+            UI.input.multiple = true;
+            UI.btn.innerText = "Unir PDF";
+        } else if(tool === 'split') {
+            UI.title.innerText = "Dividir archivo PDF";
+            UI.text.innerText = "Seleccionar un PDF";
+            UI.input.multiple = false;
+            UI.btn.innerText = "Dividir PDF";
+        } else if(tool === 'excel') {
+            UI.title.innerText = "Convertir PDF a EXCEL";
+            UI.text.innerText = "Seleccionar un PDF";
+            UI.input.multiple = false;
+            UI.btn.innerText = "Convertir a Excel";
+        } else if(tool === 'rotate') {
+            UI.title.innerText = "Rotar PDF";
+            UI.input.multiple = false;
+            UI.btn.innerText = "Rotar PDF";
+        } else if(tool === 'delete') {
+            UI.title.innerText = "Eliminar páginas";
+            UI.input.multiple = false;
+            UI.extras.innerHTML = '<input type="text" id="pages-in" class="input-box" placeholder="Ej: 1,3,5 (Páginas a borrar)">';
+            UI.btn.innerText = "Eliminar páginas";
+        } else if(tool === 'pdf2jpg') {
+            UI.title.innerText = "PDF a JPG";
+            UI.input.multiple = false;
+            UI.btn.innerText = "Convertir a imágenes";
+        }
     }
 
-    // --- EJECUCIÓN CENTRAL ---
-    async function executeTool() {
-        const fileInput = document.getElementById('file-in');
-        if (!fileInput.files.length) {
-            UI.status.textContent = "❌ Por favor selecciona un archivo.";
-            UI.status.className = "status text-red";
-            return;
-        }
+    // 2. MANEJO DE ARCHIVOS
+    UI.drop.onclick = () => UI.input.click();
+    UI.input.onchange = (e) => handleFiles(e.target.files);
 
+    UI.drop.ondragover = (e) => { e.preventDefault(); UI.drop.style.borderColor = '#e5322d'; };
+    UI.drop.ondragleave = () => UI.drop.style.borderColor = '#e0e0e0';
+    UI.drop.ondrop = (e) => {
+        e.preventDefault();
+        UI.drop.style.borderColor = '#e0e0e0';
+        handleFiles(e.dataTransfer.files);
+    };
+
+    function handleFiles(files) {
+        if (!files.length) return;
+        selectedFiles = Array.from(files);
+        
+        if (selectedFiles.length === 1) {
+            UI.info.innerText = `📄 ${selectedFiles[0].name}`;
+        } else {
+            UI.info.innerText = `📚 ${selectedFiles.length} archivos seleccionados`;
+        }
+        UI.btn.disabled = false;
+    }
+
+    // 3. EJECUTAR ACCIÓN
+    UI.btn.onclick = async () => {
+        if (!selectedFiles.length) return;
+        
         UI.btn.disabled = true;
-        UI.btn.textContent = "Procesando...";
-        UI.status.textContent = "⏳ Trabajando en ello...";
-        UI.status.className = "status";
+        UI.btn.innerText = "Procesando...";
+        UI.status.innerHTML = "⏳ Trabajando...";
+        UI.status.style.color = "#333";
 
         try {
-            if (currentTool === 'merge') await processMerge(fileInput.files);
-            else if (currentTool === 'split') await processSplit(fileInput.files[0]);
-            else if (currentTool === 'delete') await processDelete(fileInput.files[0]);
-            else if (currentTool === 'excel') await processExcel(fileInput.files[0]);
-            else if (currentTool === 'rotate') await processRotate(fileInput.files[0]);
-            else if (currentTool === 'jpg2pdf') await processJpgToPdf(fileInput.files);
-            else if (currentTool === 'pdf2jpg') await processPdfToJpg(fileInput.files[0]);
-            else if (currentTool === 'watermark') await processWatermark(fileInput.files[0]);
-            else if (currentTool === 'number') await processNumber(fileInput.files[0]);
-            else if (currentTool === 'protect') await processProtect(fileInput.files[0]);
-            
-            UI.status.textContent = "✅ ¡Operación completada con éxito!";
-            UI.status.className = "status text-green";
+            // Lógica según herramienta
+            if (activeTool === 'merge') await processMerge();
+            else if (activeTool === 'split') await processSplit();
+            else if (activeTool === 'excel') await processExcel();
+            else if (activeTool === 'rotate') await processRotate();
+            else if (activeTool === 'delete') await processDelete();
+            else if (activeTool === 'pdf2jpg') await processPdfToJpg();
+
+            UI.status.innerHTML = "✅ ¡Listo! Tu descarga ha comenzado.";
+            UI.status.style.color = "green";
         } catch (error) {
             console.error(error);
-            UI.status.textContent = "❌ Error: " + error.message;
-            UI.status.className = "status text-red";
+            UI.status.innerHTML = `❌ Error: ${error.message}`;
+            UI.status.style.color = "red";
         } finally {
+            UI.btn.innerText = "Procesar de nuevo";
             UI.btn.disabled = false;
-            UI.btn.textContent = "Ejecutar de nuevo";
         }
-    }
+    };
 
-    // --- FUNCIONES ESPECÍFICAS ---
+    // --- FUNCIONES INTERNAS (ENGINE) ---
 
-    // 1. UNIR PDF
-    async function processMerge(files) {
-        if(files.length < 2) throw new Error("Necesitas al menos 2 archivos.");
-        const mergedPdf = await PDFDocument.create();
-        for (let file of files) {
+    // A. UNIR
+    async function processMerge() {
+        if (selectedFiles.length < 2) throw new Error("Necesitas al menos 2 archivos para unir.");
+        const doc = await PDFDocument.create();
+        for (let file of selectedFiles) {
             const ab = await file.arrayBuffer();
-            const pdf = await PDFDocument.load(ab);
-            const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-            copiedPages.forEach((page) => mergedPdf.addPage(page));
+            const src = await PDFDocument.load(ab);
+            const pages = await doc.copyPages(src, src.getPageIndices());
+            pages.forEach(p => doc.addPage(p));
         }
-        const pdfBytes = await mergedPdf.save();
-        download(pdfBytes, "unido.pdf", "application/pdf");
+        const bytes = await doc.save();
+        download(bytes, "unido_ipdf.pdf", "application/pdf");
     }
 
-    // 2. DIVIDIR PDF (ZIP)
-    async function processSplit(file) {
+    // B. DIVIDIR
+    async function processSplit() {
+        const file = selectedFiles[0];
         const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
+        const src = await PDFDocument.load(ab);
         const zip = new JSZip();
-        
-        for (let i = 0; i < pdfDoc.getPageCount(); i++) {
-            const subDoc = await PDFDocument.create();
-            const [copiedPage] = await subDoc.copyPages(pdfDoc, [i]);
-            subDoc.addPage(copiedPage);
-            const pdfBytes = await subDoc.save();
-            zip.file(`pagina_${i+1}.pdf`, pdfBytes);
+
+        for(let i=0; i<src.getPageCount(); i++) {
+            const newDoc = await PDFDocument.create();
+            const [page] = await newDoc.copyPages(src, [i]);
+            newDoc.addPage(page);
+            const bytes = await newDoc.save();
+            zip.file(`pagina_${i+1}.pdf`, bytes);
         }
-        
         const content = await zip.generateAsync({type:"blob"});
         saveAs(content, "paginas_separadas.zip");
     }
 
-    // 3. ELIMINAR PÁGINAS
-    async function processDelete(file) {
-        const pagesStr = document.getElementById('extra-in').value;
-        if(!pagesStr) throw new Error("Indica qué páginas borrar.");
-        
-        // Convertir "1, 3" a array de índices [0, 2]
-        const pagesToDelete = pagesStr.split(',').map(n => parseInt(n.trim()) - 1);
-        
-        const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
-        const newPdf = await PDFDocument.create();
-        const totalPages = pdfDoc.getPageCount();
-
-        // Copiar solo las que NO están en la lista de borrar
-        const pagesToKeep = [];
-        for(let i=0; i<totalPages; i++) {
-            if(!pagesToDelete.includes(i)) pagesToKeep.push(i);
-        }
-        
-        if(pagesToKeep.length === 0) throw new Error("No puedes borrar todas las páginas.");
-
-        const copiedPages = await newPdf.copyPages(pdfDoc, pagesToKeep);
-        copiedPages.forEach(p => newPdf.addPage(p));
-        
-        const pdfBytes = await newPdf.save();
-        download(pdfBytes, "paginas_borradas.pdf", "application/pdf");
-    }
-
-    // 4. PDF A EXCEL (Tu código original mejorado)
-    async function processExcel(file) {
+    // C. EXCEL
+    async function processExcel() {
+        const file = selectedFiles[0];
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument(ab).promise;
-        let fullData = [];
+        let data = [];
 
-        for (let i = 1; i <= pdf.numPages; i++) {
+        for (let i=1; i<=pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const text = await page.getTextContent();
             let items = text.items.map(it => ({ str: it.str, y: it.transform[5], x: it.transform[4] }));
@@ -330,133 +389,73 @@
             
             let row = [], lastY = -999;
             items.forEach(it => {
-                if (lastY !== -999 && Math.abs(it.y - lastY) > 8) {
-                    fullData.push(row); row = [];
-                }
+                if (lastY !== -999 && Math.abs(it.y - lastY) > 5) { data.push(row); row = []; }
                 row.push(it.str);
                 lastY = it.y;
             });
-            if(row.length) fullData.push(row);
+            if(row.length) data.push(row);
         }
-        
         const wb = XLSX.utils.book_new();
-        const ws = XLSX.utils.aoa_to_sheet(fullData);
+        const ws = XLSX.utils.aoa_to_sheet(data);
         XLSX.utils.book_append_sheet(wb, ws, "Datos");
-        XLSX.writeFile(wb, "convertido.xlsx");
+        XLSX.writeFile(wb, "tabla_pdf.xlsx");
     }
 
-    // 5. ROTAR PDF
-    async function processRotate(file) {
+    // D. ROTAR
+    async function processRotate() {
+        const file = selectedFiles[0];
         const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
-        const pages = pdfDoc.getPages();
-        pages.forEach(p => p.setRotation(degrees(p.getRotation().angle + 90)));
-        const pdfBytes = await pdfDoc.save();
-        download(pdfBytes, "rotado.pdf", "application/pdf");
+        const doc = await PDFDocument.load(ab);
+        doc.getPages().forEach(p => p.setRotation(degrees(p.getRotation().angle + 90)));
+        const bytes = await doc.save();
+        download(bytes, "rotado.pdf", "application/pdf");
     }
 
-    // 6. JPG A PDF
-    async function processJpgToPdf(files) {
-        const pdfDoc = await PDFDocument.create();
-        for (let file of files) {
-            const ab = await file.arrayBuffer();
-            let image;
-            if (file.type === 'image/jpeg') image = await pdfDoc.embedJpg(ab);
-            else if (file.type === 'image/png') image = await pdfDoc.embedPng(ab);
-            else continue;
+    // E. BORRAR
+    async function processDelete() {
+        const input = document.getElementById('pages-in').value;
+        if (!input) throw new Error("Escribe qué páginas borrar (Ej: 1,3)");
+        const toDelete = input.split(',').map(n => parseInt(n.trim()) - 1);
+        
+        const file = selectedFiles[0];
+        const ab = await file.arrayBuffer();
+        const src = await PDFDocument.load(ab);
+        const newDoc = await PDFDocument.create();
+        const total = src.getPageCount();
 
-            const page = pdfDoc.addPage([image.width, image.height]);
-            page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
-        }
-        const pdfBytes = await pdfDoc.save();
-        download(pdfBytes, "imagenes.pdf", "application/pdf");
+        const keep = [];
+        for(let i=0; i<total; i++) if(!toDelete.includes(i)) keep.push(i);
+        
+        if(!keep.length) throw new Error("No puedes borrar todas las páginas");
+
+        const pages = await newDoc.copyPages(src, keep);
+        pages.forEach(p => newDoc.addPage(p));
+        const bytes = await newDoc.save();
+        download(bytes, "paginas_restantes.pdf", "application/pdf");
     }
 
-    // 7. PDF A JPG (ZIP)
-    async function processPdfToJpg(file) {
+    // F. PDF A JPG
+    async function processPdfToJpg() {
+        const file = selectedFiles[0];
         const ab = await file.arrayBuffer();
         const pdf = await pdfjsLib.getDocument(ab).promise;
         const zip = new JSZip();
 
         for(let i=1; i<=pdf.numPages; i++) {
             const page = await pdf.getPage(i);
-            const viewport = page.getViewport({scale: 2.0}); // Calidad alta
+            const viewport = page.getViewport({scale: 2.0});
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
             await page.render({canvasContext: ctx, viewport: viewport}).promise;
-            
-            // Convertir canvas a blob
-            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
-            zip.file(`pagina_${i}.jpg`, blob);
+            const blob = await new Promise(r => canvas.toBlob(r));
+            zip.file(`img_${i}.jpg`, blob);
         }
-
         const content = await zip.generateAsync({type:"blob"});
-        saveAs(content, "pdf_a_imagenes.zip");
+        saveAs(content, "imagenes_pdf.zip");
     }
-
-    // 8. MARCA DE AGUA
-    async function processWatermark(file) {
-        const text = document.getElementById('extra-in').value || "CONFIDENCIAL";
-        const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
-        const pages = pdfDoc.getPages();
-        
-        pages.forEach(page => {
-            const { width, height } = page.getSize();
-            page.drawText(text, {
-                x: 50,
-                y: height / 2,
-                size: 50,
-                color: rgb(0.95, 0.1, 0.1),
-                opacity: 0.3,
-                rotate: degrees(45),
-            });
-        });
-        
-        const pdfBytes = await pdfDoc.save();
-        download(pdfBytes, "marca_agua.pdf", "application/pdf");
-    }
-
-    // 9. NUMERAR PÁGINAS
-    async function processNumber(file) {
-        const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
-        const pages = pdfDoc.getPages();
-        const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-        
-        for (let i = 0; i < pages.length; i++) {
-            const page = pages[i];
-            const { width } = page.getSize();
-            page.drawText(`${i + 1}`, {
-                x: width / 2,
-                y: 20,
-                size: 12,
-                font: font,
-                color: rgb(0, 0, 0),
-            });
-        }
-        
-        const pdfBytes = await pdfDoc.save();
-        download(pdfBytes, "numerado.pdf", "application/pdf");
-    }
-
-    // 10. PROTEGER
-    async function processProtect(file) {
-        const password = document.getElementById('extra-in').value;
-        if(!password) throw new Error("Escribe una contraseña.");
-
-        const ab = await file.arrayBuffer();
-        const pdfDoc = await PDFDocument.load(ab);
-        const pdfBytes = await pdfDoc.save({
-            userPassword: password,
-            ownerPassword: password
-        });
-        download(pdfBytes, "protegido.pdf", "application/pdf");
-    }
-
 </script>
 
 </body>
